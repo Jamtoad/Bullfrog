@@ -1,2 +1,11 @@
 # Bullfrog
-This is an extremely simple and easy to use framework for making and organizing Roblox games.
+This is an extremely simple, intuitive, and easy to use framework for making roblox games!
+
+## Structure
+
+## Usage
+### Starting Bullfrog
+
+### Creating a System
+
+## Install
