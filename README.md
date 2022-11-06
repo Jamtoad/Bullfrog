@@ -44,6 +44,27 @@ Bullfrog.start()
 Boom! Now Bullfrog is running! It was as easy as that!
 
 ### Creating a System
-If you were looking at the structure examples above you may have noticed that systems are just folders. This is correct! Systems are created in Studio rather than through code. In order to create a system all you have to do is add a folder to your Systems folder and call it whatever you'd like. Make sure the name makes sense as its what youll use to get the system later. Once youve created this new system folder add a module script to it and call it "Client" or "Server". You can have one of each or both! If you for example only have a "Client" module than that system will only run on the client. If you only have a "Server" module than that module will only run on the server. If you have both then it will run on both!
+If you were looking at the structure examples above you may have noticed that systems are just folders. This is correct! Systems are created in Studio rather than through code. In order to create a system all you have to do is add a folder to your Systems folder and call it whatever you'd like. Make sure the name makes sense as its what youll use to get the system later. Once youve created this new system folder add a module script to it and call it "Client" or "Server". You can have one of each or both! If you for example only have a "Client" module than that system will only run on the client. If you only have a "Server" module than that system will 
+only run on the server. If you have both then it will run on both! Just like that you've setup a new system! Easy right?
+
+### Lifetime Functions
+Bullfrog also provides some very handy, but completely optional lifetime functions. `onSetup()`, `onStart()`, and `onUpdate()`. These can be easily added to your "Client" or "Server" module. Here is an example of how to do so as well as an explanation of each function via a comment.
+```lua
+local ClientModule = {}
+
+function ClientModule.onSetup()
+    -- Runs when this system is grabbed via setupSystems().
+end
+
+function ClientModule.onStart()
+    -- Runs when start() is called. Its safe to access other systems at this point.
+end
+
+function ClientModule.onUpdate()
+    -- Runs every frame after start() is called.
+end
+
+return ClientModule
+```
 
 ## Install
