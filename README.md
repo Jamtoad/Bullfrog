@@ -47,8 +47,36 @@ Boom! Now Bullfrog is running! It was as easy as that!
 If you were looking at the structure examples above you may have noticed that systems are just folders. This is correct! Systems are created in Studio rather than through code. In order to create a system all you have to do is add a folder to your Systems folder and call it whatever you'd like. Make sure the name makes sense as its what youll use to get the system later. Once youve created this new system folder add a module script to it and call it "Client" or "Server". You can have one of each or both! If you for example only have a "Client" module than that system will only run on the client. If you only have a "Server" module than that system will 
 only run on the server. If you have both then it will run on both! Just like that you've setup a new system! Easy right?
 
+### Getting Another System
+For easy access between systems on the same environment Bullfrog provides `getSystem()`! In the below example the WeaponSystem gets the CameraSystem and alters its FOV property.
+
+**Weapon System**
+```lua
+local WeaponClientModule = {}
+
+local Bullfrog = require(game:GetService("ReplicatedStorage").Libraries.Bullfrog)
+
+local CameraSystem
+
+function WeaponClientModule.onStart()
+     CameraSystem = Bullfrog.getSystem("CameraSystem")
+     CameraSystem.FOV = 90
+end
+
+return WeaponClientModule
+```
+
+**Camera System**
+```lua
+local CameraClientModule = {}
+
+CameraClientModule.FOV = 50
+
+return CameraClientModule
+```
+
 ### Lifetime Functions
-Bullfrog also provides some very handy, but completely optional lifetime functions. `onSetup()`, `onStart()`, and `onUpdate()`. These can be easily added to your "Client" or "Server" module. Here is an example of how to do so as well as an explanation of each function via a comment.
+You may have noticed the `onStart()` function above. Bullfrog provides some very handy, but completely optional lifetime functions. `onSetup()`, `onStart()`, and `onUpdate()`. These can be easily added to your "Client" or "Server" module. Here is an example of how to do so. As well as an explanation of each function via a comment.
 ```lua
 local ClientModule = {}
 
@@ -68,3 +96,21 @@ return ClientModule
 ```
 
 ## Install
+### Roblox Workflow
+You can get Bullfrog off the Roblox Marketplace here.
+https://www.roblox.com/library/11486909913/Bullfrog
+
+### Rojo Workflow
+Get the `.rbxm` file from the releases page. This file can be used to sync to Studio when using Rojo.
+
+### Raw Files
+You can find both the `.lua` and the `.rbxm` files here in the releases section.
+
+## Complete API
+`getSystem(systemName)`
+`setupSystems(systemDirectory)`
+`start()`
+
+`onSetup()`
+`onStart()`
+`onUpdate()`
