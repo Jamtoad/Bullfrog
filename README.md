@@ -15,9 +15,22 @@ The structuring when using Bullfrog is as follows. Similar to Knit and other fra
 ### Systems
 This is where Bullfrog strays from most other frameworks. The typical way to setup your systems when using Bullfrog is to have a folder in ReplicatedStorage that will contain all of your systems. Now theoretically, you don't have to do it this way. In fact there are many other ways you can do it. This way just makes the most sense to me. It allows you to group all of your code into specific folders, in each folder you have the server and the client code, all in one place! This allows for much easier management and organization.
 
-For Example: Here we have a camera system and a weapon system. You can see the camera system only has a client module. This is because systems don't need both client and server modules to work. Bullfrog will only start the environment it can find. Some systems may only have a server module, this also works. Ill elaborate more on this later. You can see below an example of how code may typically structured when using Bullfrog, everything is neatly organized and "containerized"!
+For Example: Here we have a camera system and a weapon system. You can see the camera system only has a client module. This is because systems don't need both client and server modules to work. Bullfrog will only start the environment it can find. Some systems may only have a server module, this also works. You may also notice that the modules in the weapons system have submodules. Ill elaborate more on all this later. You can see below an example of how code may typically structured when using Bullfrog, everything is neatly organized and "containerized"!
+
+#### Typical Setup
 
 ![image](https://user-images.githubusercontent.com/65873272/200153820-71595195-be09-4f92-baaa-b2a78440bcc8.png)
+
+#### Split Setup
+Like I was saying earlier there are also other ways to structure this. Here is another example. In this setup the systems are divided among the server / client boundaries along with the startup scripts. This I suppose is more secure, but it gives up containerization and organization for security. This could be valuable to some people. I personally stick to the typical setup as I would rather forfeit some security to maintain sanity when working with a large codebase.
+
+**Client**
+
+![image](https://user-images.githubusercontent.com/65873272/200154637-032fbeaf-7833-4557-9337-836949dce0cb.png)
+
+**Server**
+
+![image](https://user-images.githubusercontent.com/65873272/200154705-7e4cdfbc-e253-4bd8-a202-ab81fd1a67a4.png)
 
 ## Usage
 ### Starting Bullfrog
