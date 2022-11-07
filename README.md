@@ -88,7 +88,7 @@ function ClientModule.onStart()
     -- Runs when start() is called. Its safe to access other systems at this point.
 end
 
-function ClientModule.onUpdate()
+function ClientModule.onUpdate(deltaTime)
     -- Runs every frame after start() is called.
 end
 
@@ -107,10 +107,14 @@ Get the `.rbxm` file from the releases page. This file can be used to sync to St
 You can find both the `.lua` and the `.rbxm` files here in the releases section.
 
 ## Complete API
-`getSystem(systemName)`
-`setupSystems(systemDirectory)`
-`start()`
+`getSystem(systemName)` - Gets the requested system. If one is not found then it will return an error. You cannot use this to get systems across the server / client boundary.
 
-`onSetup()`
-`onStart()`
-`onUpdate()`
+`setupSystems(systemDirectory)` - This will loop through the specified systemDirectory and get all of the children. It will then check if that system has a module for the current environment. If it finds one it will require it and add it to the systems pool. If the module has a onSetup() function this is when it gets called.
+
+`start()` - Loops through all the setup systems and if those systems have a onStart() module it will call them, thereby starting the systems.
+
+`onSetup()` - Gets called when a system is required via setupSystems()
+
+`onStart()` - Gets called when start() is called.
+
+`onUpdate(deltaTime)` - Gets called every heartbeat and has an optional argument of delta time or time since last frame.
