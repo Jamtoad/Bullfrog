@@ -133,7 +133,8 @@ return ClientModule
 I know it may look like there is a lot going on here, but its really simple! If you have any experience with Roblox's event system than you may already be catching on! We create a table in the server script called `remoteLinks` this is case sensitive and it's how Bullfrog determines if there are links that need to be created! Inside this table we can create any number of Remote Links by specifying a name and then calling the `Bullfrog.createRemoteLink()` function. Now you have a Remote Link! These function the exact same way as Remote Events. Now you may be asking how do I listen for this Link on the client? Simple! When you access the `remoteLinks` table on the client you are accessing a cope of the server version of that table. This can be accessed by doing `ClientModule.remoteLinks`. Beware, this table can only be accessed after `onSetup()` is called. Also `createRemoteLink()` can only be called from the server. `createBindableLink()` can be called from both the server and the client and functions in mostly the same way as Bindable Events. 
 
 **Cross System Communication**
-Cross system communication can be accomplished with some help from the `Bullfrog.getSystem()` function. Here is an example in which two server scripts communicate with each other using a Bindable Link.
+
+This can be accomplished with some help from the `Bullfrog.getSystem()` function and Bindable Links! Here is an example in which two server scripts communicate with each other using a Bindable Link.
 ```lua
 local ServerModule = {}
 
