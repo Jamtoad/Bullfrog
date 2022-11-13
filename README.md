@@ -1,5 +1,5 @@
 # Bullfrog
-This is an extremely simple, intuitive, and easy to use framework for making roblox games! Not to mention it is extremely lightweight! The length of the entire module is only about 60 lines of code if you don't count the comments.
+This is an extremely simple, intuitive, and easy to use framework for making roblox games! Not to mention it is extremely lightweight! The length of the entire module is only about 100 lines of code if you don't count the comments.
 
 ## Structure
 ### Bullfrog
@@ -95,6 +95,45 @@ end
 return ClientModule
 ```
 
+### Links
+Bullfrog provides an extremely simple way to setup server / client communcation. These are called Links! There are two types of Links; Remote Links and Bindable Links. They function exactly the same as their Remote Event and Bindable Event counterparts. In the future I may add more features to them, so be on the lookout! Links are contained on a per system basis. This makes organization much easier! Here is an example on how to use them!
+
+**Server Module**
+```Lua
+local ServerModule = {}
+
+local Bullfrog = require(game:GetService("ReplicatedStorage").Libraries.Bullfrog)
+
+ServerModule.remoteLinks = {
+     testRemoteLink = Bullfrog.createRemoteLink()
+}
+
+return ServerModule
+```
+**Client Module**
+```Lua
+local ClientModule = {}
+
+local Bullfrog = require(game:GetService("ReplicatedStorage").Libraries.Bullfrog)
+
+ClientModule.bindableLinks = {
+     testBindableLink = Bullfrog.createBindableLink()
+}
+
+local function onTestRemoteLink()
+     print("Fired!")
+     
+     testBindableLink:Fire()
+end
+
+function ClientModule.onSetup()
+     ClientModule.remoteLinks.testRemoteLink:Connect()
+end
+
+return ClientModule
+```
+I know it may look like there is a lot going on here, but its really simple! If you have any experience with Roblox's event system than you may already be catching on! We create a table in the server script called `remoteLinks` this is case sensitive and it's how Bullfrog determines if there are links that need to be created! Inside this table we can create any number of Remote Links by specifying a name and then calling the `Bullfrog.createRemoteLink()` function. Now you have a Remote Link! These function the exact same way as Remote Events. Now you may be asking how do I listen for this Link on the client? Simple! When you access the `remoteLinks` table on the client you are accessing the server version of that table. This can be accessed by doing `ClientModule.remoteLinks`. Beware, this table can only be accessed after `onSetup()` is called. Also `createRemoteLink()` can only be called from the server. `createBindableLink()` can be called from both the server and the client and functions in mostly the same way as Bindable Events.
+
 ## Install
 ### Roblox Workflow
 You can get Bullfrog off the Roblox Marketplace here.
@@ -107,7 +146,11 @@ Get the `.rbxm` file from the releases page. This file can be used to sync to St
 You can find both the `.lua` and the `.rbxm` files here in the releases section.
 
 ## Complete API
-`getSystem(systemName)` - Gets the requested system. If one is not found then it will return an error. You cannot use this to get systems across the server / client boundary.
+`setupRemoteLink()` - Creates a Remote Link aka Remote Event | NOTE - This is a server only function. Client scripts cannot access this.
+
+`setupBindableLink()` - Creates a Bindable Link aka Bindable Event
+
+`getSystem(systemName)` - Gets the requested system. If one is not found then it will return an error. | NOTE - You cannot use this to get systems across the server / client boundary.
 
 `setupSystems(systemDirectory)` - This will loop through the specified systemDirectory and get all of the children. It will then check if that system has a module for the current environment. If it finds one it will require it and add it to the systems pool. If the module has a onSetup() function this is when it gets called.
 
