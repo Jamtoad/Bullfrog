@@ -108,6 +108,10 @@ ServerModule.remoteLinks = {
      testRemoteLink = Bullfrog.createRemoteLink()
 }
 
+ServerModule.onStart()
+     ServerModule.remoteLinks.testRemoteLink:FireAllClients()
+end
+
 return ServerModule
 ```
 **Client Module**
@@ -116,23 +120,51 @@ local ClientModule = {}
 
 local Bullfrog = require(game:GetService("ReplicatedStorage").Libraries.Bullfrog)
 
-ClientModule.bindableLinks = {
-     testBindableLink = Bullfrog.createBindableLink()
-}
-
 local function onTestRemoteLink()
      print("Fired!")
-     
-     testBindableLink:Fire()
 end
 
 function ClientModule.onSetup()
-     ClientModule.remoteLinks.testRemoteLink:Connect()
+     ClientModule.remoteLinks.testRemoteLink.onClientEvent:Connect(onTestRemoteLink)
 end
 
 return ClientModule
 ```
-I know it may look like there is a lot going on here, but its really simple! If you have any experience with Roblox's event system than you may already be catching on! We create a table in the server script called `remoteLinks` this is case sensitive and it's how Bullfrog determines if there are links that need to be created! Inside this table we can create any number of Remote Links by specifying a name and then calling the `Bullfrog.createRemoteLink()` function. Now you have a Remote Link! These function the exact same way as Remote Events. Now you may be asking how do I listen for this Link on the client? Simple! When you access the `remoteLinks` table on the client you are accessing the server version of that table. This can be accessed by doing `ClientModule.remoteLinks`. Beware, this table can only be accessed after `onSetup()` is called. Also `createRemoteLink()` can only be called from the server. `createBindableLink()` can be called from both the server and the client and functions in mostly the same way as Bindable Events.
+I know it may look like there is a lot going on here, but its really simple! If you have any experience with Roblox's event system than you may already be catching on! We create a table in the server script called `remoteLinks` this is case sensitive and it's how Bullfrog determines if there are links that need to be created! Inside this table we can create any number of Remote Links by specifying a name and then calling the `Bullfrog.createRemoteLink()` function. Now you have a Remote Link! These function the exact same way as Remote Events. Now you may be asking how do I listen for this Link on the client? Simple! When you access the `remoteLinks` table on the client you are accessing a cope of the server version of that table. This can be accessed by doing `ClientModule.remoteLinks`. Beware, this table can only be accessed after `onSetup()` is called. Also `createRemoteLink()` can only be called from the server. `createBindableLink()` can be called from both the server and the client and functions in mostly the same way as Bindable Events. 
+
+**Cross System Communication**
+Cross system communication can be accomplished with some help from the `Bullfrog.getSystem()` function. Here is an example in which two server scripts communicate with each other using a Bindable Link.
+```lua
+local ServerModule = {}
+
+local Bullfrog = require(game:GetService("ReplicatedStorage").Libraries.Bullfrog)
+
+ServerModule.bindableLinks = {
+     testBindableLink = Bullfrog.createBindableLink()
+}
+
+ServerModule.onStart()
+     ServerModule.testBindableLink:Fire("Hello World")
+end  
+
+return ServerModule
+```
+```lua
+local ServerModule = {}
+
+local Bullfrog = require(game:GetService("ReplicatedStorage").Libraries.Bullfrog)
+
+local function onTestBindableLink(text)
+     print(text)
+end  
+
+ServerModule.onStart()
+     Bullfrog.getSystem("otherSystem").bindableLinks.testBindableLink.Event:Connect(ontestBindableLink)
+end  
+
+return ServerModule
+```
+Just like in the Remote Links example we use a reserved table called `bindableLink` to tell Bullfrog what Bindable Links to create. We then fire() that Bindable Link and in another system we use `getSystem()` to get the Bindable Link and connect it. These two examples show you the basics on how to use Links in Bullfrog! The Roblox Docs can also help you with networking questions as well, as Links are just a wrapper and use the same API.
 
 ## Install
 ### Roblox Workflow
