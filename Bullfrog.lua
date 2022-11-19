@@ -72,13 +72,21 @@ function BULLFROG.setupSystems(systemsDirectory)
         
         return nil
     end
-
+    
+    local function findModule(system, moduleType)
+        for _, _child in pairs(system:GetChildren()) do
+            if string.match(_child.Name, moduleType .. "$") then
+                return _child
+            end
+        end
+    end
+    
     if not systemsDirectory then
         error("Did not specify a systems directory.")
     end
     
     for _, _system in pairs(systemsDirectory:GetChildren()) do
-        local _module = _system:FindFirstChild(
+        local _module = findModule(_system,
             if IS_SERVER then "Server" else "Client")
     
         if _module then
