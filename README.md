@@ -8,12 +8,12 @@ Place the Bullfrog module into ReplicatedStorage. I usually like to place all of
 ![image](https://user-images.githubusercontent.com/65873272/200153913-5bbdd15a-f702-4c05-830d-6416f85d3177.png)
 
 ### Startup Scripts
-The structuring when using Bullfrog is as follows. Similar to Knit and other frameworks, you need two scripts to start Bullfrog. A server script and a local script. I am using the RunContext feature to group them together in ReplicatedStorage. You can have yours anywhere, maybe your server script in ServerScriptService and your client script in StarterPlayer scripts. Its up to you, I just prefer this method as it keeps things together.
+The structuring when using Bullfrog is as follows. Similar to Knit and other frameworks, you need two scripts to start Bullfrog. A server script and a local script. I am using the **RunContext** feature to group them together in ReplicatedStorage. You can have yours anywhere, maybe your server script in ServerScriptService and your client script in StarterPlayer scripts. Its up to you, I just prefer this method as it keeps things together.
 
 ![image](https://user-images.githubusercontent.com/65873272/200153950-7baec13c-9448-4465-84a8-ba0dabd116bb.png)
 
 ### Systems
-This is where Bullfrog strays from most other frameworks. The typical way to setup your systems when using Bullfrog is to have a folder in ReplicatedStorage that will contain all of your systems. Now theoretically, you don't have to do it this way. This way just makes the most sense to me. It allows you to group all of your code into specific folders, in each folder you have the server and the client code, all in one place! This allows for much easier management and organization. I believe this is what makes Bullfrog special!
+This is where Bullfrog strays from most other frameworks. The typical way to setup your systems when using Bullfrog is to have a folder in ReplicatedStorage that will contain all of your systems. Now theoretically, you don't have to do it this way. This way just makes the most sense to me. It allows you to group all of your code into specific folders, in each folder you have the server and the client code, all in one place! This allows for much easier management and organization. I believe this is what makes Bullfrog special! Bullfrog also takes advantage of the new **Run Context** feature! This is important as it allows local scripts to run inside ReplicatedStorage.
 
 For Example: Here we have a camera system and a weapon system. You can see the camera system only has a client module. This is because systems don't need both client and server modules to work. Bullfrog will only start the environment it can find. Some systems may only have a server module, this also works. You may also notice that the modules in the weapons system have submodules. Ill elaborate more on all this later. You can see below an example of how code may typically structured when using Bullfrog, everything is neatly organized and containerized!
 
@@ -130,10 +130,11 @@ end
 
 return ClientModule
 ```
-I know it may look like there is a lot going on here, but its really simple! If you have any experience with Roblox's event system than you may already be catching on! We create a table in the server script called `remoteLinks` this is case sensitive and it's how Bullfrog determines if there are links that need to be created! Inside this table we can create any number of Remote Links by specifying a name and then calling the `Bullfrog.createRemoteLink()` function. Now you have a Remote Link! These function the exact same way as Remote Events. Now you may be asking how do I listen for this Link on the client? Simple! When you access the `remoteLinks` table on the client you are accessing a cope of the server version of that table. This can be accessed by doing `ClientModule.remoteLinks`. Beware, this table can only be accessed after `onSetup()` is called. Also `createRemoteLink()` can only be called from the server. `createBindableLink()` can be called from both the server and the client and functions in mostly the same way as Bindable Events. 
+I know it may look like there is a lot going on here, but its really simple! If you have any experience with Roblox's event system than you may already be catching on! We create a table in the server script called `remoteLinks` this is case sensitive and it's how Bullfrog determines if there are links that need to be created! Inside this table we can create any number of Remote Links by specifying a name and then calling the `Bullfrog.createRemoteLink()` function. Now you have a Remote Link! These function the exact same way as Remote Events. Now you may be asking how do I listen for this Link on the client? Simple! When you access the `remoteLinks` table on the client you are accessing a copy of the server version of that table. This can be accessed by doing `ClientModule.remoteLinks`. Beware, Links can only be accessed after `onSetup()` is called. Also `createRemoteLink()` can only be called from the server. `createBindableLink()` can be called from both the server and the client and functions in mostly the same way as Bindable Events. 
 
 **Cross System Communication**
-Cross system communication can be accomplished with some help from the `Bullfrog.getSystem()` function. Here is an example in which two server scripts communicate with each other using a Bindable Link.
+
+This can be accomplished with some help from the `Bullfrog.getSystem()` function and Bindable Links! Here is an example in which two server scripts communicate with each other using a Bindable Link.
 ```lua
 local ServerModule = {}
 
