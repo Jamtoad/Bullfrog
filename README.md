@@ -76,7 +76,7 @@ return CameraClientModule
 ```
 
 ### Lifetime Functions
-You may have noticed the `onStart()` function above. Bullfrog provides some very handy, but completely optional lifetime functions. `onSetup()`, `onStart()`, and `onUpdate()`. These can be easily added to your "Client" or "Server" module. Here is an example of how to do so. As well as an explanation of each function via a comment.
+You may have noticed the `onStart()` function above. Bullfrog provides some very handy, but completely optional lifetime functions. `onSetup()`, `onStart()`, `onStop()`, and `onUpdate()`. These can be easily added to your "Client" or "Server" module. Here is an example of how to do so. As well as an explanation of each function via a comment.
 ```lua
 local ClientModule = {}
 
@@ -86,6 +86,10 @@ end
 
 function ClientModule.onStart()
     -- Runs when start() is called. Its safe to access other systems at this point.
+end
+
+function ClientModule.onStop()
+    -- Runs when stop() is called.  
 end
 
 function ClientModule.onUpdate(deltaTime)
@@ -185,7 +189,7 @@ You can find both the `.lua` and the `.rbxm` files here in the releases section.
 
 `getSystem(systemName)` - Gets the requested system. If one is not found then it will return an error. | NOTE - You cannot use this to get systems across the server / client boundary.
 
-`setupSystems(systemDirectory)` - This will loop through the specified systemDirectory and get all of the children. It will then check if that system has a module for the current environment. If it finds one it will require it and add it to the systems pool. If the module has a onSetup() function this is when it gets called.
+`setupSystems(systemDirectory or {table of systems})` - This will loop through the specified systemDirectory/table and get all of the children. It will then check if that system has a module for the current environment. If it finds one it will require it and add it to the systems pool. If the module has a onSetup() function this is when it gets called.
 
 `start()` - Loops through all the setup systems and if those systems have an onStart() function it will call them, thereby starting the systems.
 
