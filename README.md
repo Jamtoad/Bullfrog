@@ -1,5 +1,5 @@
 # Bullfrog
-This is an extremely simple, intuitive, and easy to use framework for making roblox games! Not to mention it is extremely lightweight! The length of the entire module is only about 100 lines of code if you don't count the comments.
+This is an extremely simple, intuitive, and easy to use framework for making roblox games! Not to mention it is extremely lightweight! The length of the entire module is only about 175 lines of code if you don't count the comments.
 
 ## Structure
 ### Bullfrog
