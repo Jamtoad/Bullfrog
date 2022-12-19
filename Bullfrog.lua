@@ -1,6 +1,7 @@
 -- Bullfrog | Version 2
 -- Version 1: Initial release. | 11/07/2022
 -- Version 2: Links and comments added! | 11/12/2022
+-- Version 3: System and security improvements! | 12/19/2022
 
 -- Root
 local BULLFROG = {}
@@ -56,6 +57,10 @@ end
     Errors - If no directory is specified
 ]]
 function BULLFROG.setupSystems(systemsDirectory)
+    local function clearSystems()
+        return {}
+    end
+
     local function setupLinks(system, links)    
         local function setupFolder()
             local _folder = Instance.new("Folder")
@@ -80,12 +85,30 @@ function BULLFROG.setupSystems(systemsDirectory)
             end
         end
     end
+
+    local function deleteServerModule(system)
+        local _serverModule = findModule(system, "Server")
+
+        if _serverModule then
+            _serverModule:Destroy()
+        end
+
+        return nil
+    end
     
     if not systemsDirectory then
         error("Did not specify a systems directory.")
     end
+
+    systems = clearSystems()
     
-    for _, _system in pairs(systemsDirectory:GetChildren()) do
+    for _, _system in pairs(if type(systemsDirectory) == "table" then 
+        systemsDirectory else systemsDirectory:GetChildren()) do
+
+        if not IS_SERVER then
+            deleteServerModule(_system)
+        end
+        
         local _module = findModule(_system,
             if IS_SERVER then "Server" else "Client")
     
@@ -125,11 +148,30 @@ function BULLFROG.start()
         
         if _system.onUpdate then
             coroutine.wrap(function()
-                RUN_SERVICE.Heartbeat:Connect(_system.onUpdate)
+                _system.onUpdateConnection =
+                    RUN_SERVICE.Heartbeat:Connect(_system.onUpdate)
             end)()
         end
     end
     
+    return nil
+end
+
+--[[
+    Description - Stops the systems that were setup in the setupSystems(),
+    also calls onStop() and unbinds any onUpdate() functions
+]]
+function BULLFROG.stop()
+    for _, _system in pairs(systems) do
+        if _system.onStop then
+            coroutine.wrap(_system.onStop)()
+        end
+
+        if _system.onUpdate and _system.onUpdateConnection then
+            _system.onUpdateConnection:Disconnect()
+        end
+    end
+
     return nil
 end
 
