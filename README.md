@@ -15,14 +15,14 @@ The structuring when using Bullfrog is as follows. Similar to Knit and other fra
 ### Systems
 This is where Bullfrog strays from most other frameworks. The typical way to setup your systems when using Bullfrog is to have a folder in ReplicatedStorage that will contain all of your systems. Now theoretically, you don't have to do it this way. This way just makes the most sense to me. It allows you to group all of your code into specific folders, in each folder you have the server and the client code, all in one place! This allows for much easier management and organization. I believe this is what makes Bullfrog special! Bullfrog also takes advantage of the new **Run Context** feature! This is important as it allows local scripts to run inside ReplicatedStorage.
 
-For Example: Here we have a camera system and a weapon system. You can see the camera system only has a client module. This is because systems don't need both client and server modules to work. Bullfrog will only start the environment it can find. Some systems may only have a server module, this also works. You may also notice that the modules in the weapons system have submodules. Ill elaborate more on all this later. You can see below an example of how code may typically structured when using Bullfrog, everything is neatly organized and containerized!
+For Example: Here we have a camera system and a weapon system. You can see the camera system only has a client module. This is because systems don't need both client and server modules to work. Bullfrog will only start the environment it can find. Some systems may only have a server module, this also works. You can see below an example of how code may typically structured when using Bullfrog, everything is neatly organized and containerized!
 
 #### Typical Setup
 
 ![image](https://user-images.githubusercontent.com/65873272/200153820-71595195-be09-4f92-baaa-b2a78440bcc8.png)
 
 #### Split Setup
-Like I was saying earlier there are also other ways to structure this. Here is another example. In this setup the systems are divided among the server / client boundaries along with the startup scripts. This I suppose is more secure, but it gives up containerization and organization for security. This could be valuable to some people. I personally stick to the typical setup as I would rather forfeit some security to maintain sanity when working with a large codebase.
+Like I was saying earlier there are also other ways to structure this. Here is another example. In this setup the systems are divided among the server / client boundaries along with the startup scripts. This I suppose is more secure, but it gives up containerization and organization for security. This could be valuable to some people. I personally stick to the typical setup as I would rather forfeit some security to maintain sanity when working with a large codebase. Bullfrog does attempt to delete the server code for the clients, but there are some issues I am aware of with this feature at the moment.
 
 **Client**
 
@@ -187,10 +187,14 @@ You can find both the `.lua` and the `.rbxm` files here in the releases section.
 
 `setupSystems(systemDirectory)` - This will loop through the specified systemDirectory and get all of the children. It will then check if that system has a module for the current environment. If it finds one it will require it and add it to the systems pool. If the module has a onSetup() function this is when it gets called.
 
-`start()` - Loops through all the setup systems and if those systems have a onStart() module it will call them, thereby starting the systems.
+`start()` - Loops through all the setup systems and if those systems have an onStart() function it will call them, thereby starting the systems.
+
+`stop()` - Loops through all the setup systems and if those systems have an onStop() function it will call them. It also disconnects any onUpdate() functions.
 
 `onSetup()` - Gets called when a system is required via setupSystems()
 
 `onStart()` - Gets called when start() is called.
+
+`onStop()` - Gets called when stop() is called.
 
 `onUpdate(deltaTime)` - Gets called every heartbeat and has an optional argument of delta time or time since last frame.
