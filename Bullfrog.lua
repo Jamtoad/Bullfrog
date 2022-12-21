@@ -1,7 +1,10 @@
--- Bullfrog | Version 2
--- Version 1: Initial release. | 11/07/2022
--- Version 2: Links and comments added! | 11/12/2022
--- Version 3: System and security improvements! | 12/19/2022
+--[[
+    Bullfrog | Created by Jam_Toad
+    Version 1: Initial release. | 11/07/2022
+    Version 2: Links and comments added! | 11/12/2022
+    Version 3: System and security improvements! | 12/19/2022
+    Version 4: Security reversion and better string filtering! | 12/21/2022
+]]
 
 -- Root
 local BULLFROG = {}
@@ -57,10 +60,6 @@ end
     Errors - If no directory is specified
 ]]
 function BULLFROG.setupSystems(systemsDirectory)
-    local function clearSystems()
-        return {}
-    end
-
     local function setupLinks(system, links)    
         local function setupFolder()
             local _folder = Instance.new("Folder")
@@ -80,37 +79,23 @@ function BULLFROG.setupSystems(systemsDirectory)
     
     local function findModule(system, moduleType)
         for _, _child in pairs(system:GetChildren()) do
-            if string.match(_child.Name, moduleType .. "$") then
+            if string.match(string.lower(_child.Name), moduleType) then
                 return _child
             end
         end
-    end
-
-    local function deleteServerModule(system)
-        local _serverModule = findModule(system, "Server")
-
-        if _serverModule then
-            _serverModule:Destroy()
-        end
-
-        return nil
     end
     
     if not systemsDirectory then
         error("Did not specify a systems directory.")
     end
 
-    systems = clearSystems()
+    systems = {}
     
     for _, _system in pairs(if type(systemsDirectory) == "table" then 
         systemsDirectory else systemsDirectory:GetChildren()) do
-
-        if not IS_SERVER then
-            deleteServerModule(_system)
-        end
         
         local _module = findModule(_system,
-            if IS_SERVER then "Server" else "Client")
+            if IS_SERVER then "server" else "client")
     
         if _module then
             local _requiredModule = require(_module)
